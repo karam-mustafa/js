@@ -40,28 +40,71 @@ let displayNouraInfo = `${nouraInfoObject.firstName} ${nouraInfoObject.lastName}
 // console.log('===========================');
 // console.log(displayNouraInfo);
 
-
-
-
 let students = [
-    'ahmed', // 0
-    'mohammed',// 1
-    'ali1',// 2
-    'ali2',// 3
-    'ali3',// 4
-    'ali4',// 5
-    'ali5',// 6
-    'ali6',// 7
-    'ali7',// 8
+  "ali0", // 0
+  "ali1", // 1
+  "ali2", // 2
+  "ali3", // 3
+  "ali4", // 4
+  "ali5", // 5
+  "ali6", // 6
+  "ali7", // 7
+  "ali8", // 8
+  "ali9", // 9
 ];
 
-let text = '';
+let text = "";
 
-for(let index = 0;  index < students.length; index++) {
+// for loop
+// for (let index = 0; index < students.length; index++) {
+// text = text + " " + students[index];
+// document.write(`${students[index]} \n`);
+// }
 
-    text = text + ' ' + students[index];
+// forEach
+
+// while
+// let index = 0;
+// while (index < students.length) {
+//   document.write(`${students[index]} \n`);
+//   index++;
+// }
+
+// function printArrayValues(ahmed, ali) {
+
+//   students.forEach(function (item) {
+//     console.log(item);
+//   });
+
+//   console.log(ahmed + ali);
+// }
+
+// printArrayValues(30, 20);
 
 
-    console.log(index, students[index])
+
+let programmingLanguages = [
+  'C++',
+  'C',
+  'JS',
+  'PHP',
+  'JAVA',
+];
+
+function printLanguages(lang) {
+  // create the element
+  let createdElement = document.createElement('div')
+  // give the element new text
+  createdElement.innerText = `This is: ${lang}`;
+  // select the body
+  let body = document.querySelector('body');
+  // give the body a new child
+  body.appendChild(createdElement)
 }
-console.log(text)
+
+programmingLanguages.forEach(function(item) {
+
+  // for each item like C++, C, Js ..etc
+  // run this function
+  printLanguages(item)
+})
