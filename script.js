@@ -153,17 +153,22 @@ let elementIndex = 0;
 const newRowButton = document.querySelector(".add-new-button");
 // option1
 newRowButton.addEventListener("click", () => {
+  
+  // get the input values
   const nameInput = document.querySelector(".name");
   const lastInput = document.querySelector(".last");
   const handleInput = document.querySelector(".handle");
   
+  // add the new row
   addRowToTable(nameInput.value, lastInput.value, handleInput.value, elementIndex);
 
   // option2
   // newRowButton.addEventListener("click", addRowToTable);
 
+  // get the delete button
   const deleteButton = document.querySelector(`.delete-button-${elementIndex}`);
 
+  // add delete button on user click
   deleteButton.addEventListener("click", (event) => {
     event.target.parentElement.parentElement.remove();
   });
