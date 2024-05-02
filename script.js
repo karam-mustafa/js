@@ -81,30 +81,102 @@ let text = "";
 
 // printArrayValues(30, 20);
 
+// let programmingLanguages = [
+//   'C++',
+//   'C',
+//   'JS',
+//   'PHP',
+//   'JAVA',
+// ];
+
+// function printLanguages(lang) {
+//   // create the element
+//   let createdElement = document.createElement('div')
+//   // give the element new text
+//   createdElement.innerText = `This is: ${lang}`;
+//   // select the body
+//   let body = document.querySelector('body');
+//   // give the body a new child
+//   body.appendChild(createdElement)
+// }
+
+// programmingLanguages.forEach((item) => {
+
+//   // for each item like C++, C, Js ..etc
+//   // run this function
+//   printLanguages(item)
+// })
+
+// arrow function
+// const print = () => {
+//   console.log(1);
+// }
+
+// print()
+
+// const tr = document.createElement('tr');
+// const th = document.createElement('th');
+// th.innerText = '3';
+// const td1 = document.createElement('td');
+// td1.innerHTML = 'karam';
+// const td2 = document.createElement('td');
+// td2.innerHTML = 'mustafa';
+// const td3 = document.createElement('td');
+// td3.innerHTML = 'karam';
+
+// tr.appendChild(th)
+// tr.appendChild(td1)
+// tr.appendChild(td2)
+// tr.appendChild(td3)
+
+const addRowToTable = (name, last, handle, elementIndex) => {
+  const tableBody = document.querySelector(".table tbody");
+  tableBody.insertAdjacentHTML(
+    "beforeend",
+    `
+          <tr>
+              <th scope="row">${elementIndex}</th>
+              <td>${name}</td>
+              <td>${last}</td>
+              <td>${handle}</td>
+              <td>      
+              <button onclick="deleteRow(event)" class="btn btn-danger delete-button-${elementIndex}">Delete row</button>
+              </td>
+          </tr>
+  `
+  );
+};
 
 
-let programmingLanguages = [
-  'C++',
-  'C',
-  'JS',
-  'PHP',
-  'JAVA',
-];
+let elementIndex = 0;
 
-function printLanguages(lang) {
-  // create the element
-  let createdElement = document.createElement('div')
-  // give the element new text
-  createdElement.innerText = `This is: ${lang}`;
-  // select the body
-  let body = document.querySelector('body');
-  // give the body a new child
-  body.appendChild(createdElement)
-}
+const newRowButton = document.querySelector(".add-new-button");
+// option1
+newRowButton.addEventListener("click", () => {
+  const nameInput = document.querySelector(".name");
+  const lastInput = document.querySelector(".last");
+  const handleInput = document.querySelector(".handle");
+  
+  addRowToTable(nameInput.value, lastInput.value, handleInput.value, elementIndex);
 
-programmingLanguages.forEach(function(item) {
+  // option2
+  // newRowButton.addEventListener("click", addRowToTable);
 
-  // for each item like C++, C, Js ..etc
-  // run this function
-  printLanguages(item)
-})
+  const deleteButton = document.querySelector(`.delete-button-${elementIndex}`);
+
+  deleteButton.addEventListener("click", (event) => {
+    event.target.parentElement.parentElement.remove();
+  });
+
+  elementIndex += 1;
+
+
+  nameInput.value = '';
+  lastInput.value = '';
+  handleInput.value = '';
+
+});
+
+const deleteRow = (event) => {
+  event.target.parentElement.parentElement.remove();
+};
