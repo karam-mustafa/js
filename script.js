@@ -1,17 +1,9 @@
-
 // أول شي بدي عرف مصفوفة اجباري لحتى خزن فيها البيانات يلي عم ضيفها على الجدول - كل ما ببعت سطر جديد للجدول بضيفه ككائن على المصفوفة
-const data = [];
+const data = JSON.parse(localStorage.getItem("todo")) || [];
 
-
-
-//////////////////////////////////////////////// الاضافة ////////////////////////////////////////////////  
-
-// Add a new row هي الدالة الخاصة باضافة سطر جديد للجدول وهي بتتنفذ لما نكبس على زر 
-const addRowToTable = (name, last, handle, elementIndex) => {
-
+const loadDataToTable = (name, last, handle, elementIndex) => {
   // عم اعملي سيليكت على الجدول
   const tableBody = document.querySelector(".table tbody");
-  
   //  عم حط بقلب هذا الجدول السطر الجديد بكل عناصره
   tableBody.insertAdjacentHTML(
     "beforeend",
@@ -22,38 +14,60 @@ const addRowToTable = (name, last, handle, elementIndex) => {
               <td>${last}</td>
               <td>${handle}</td>
               <td>      
-
-              
-              <button onclick="deleteRow(event)" class="btn btn-danger delete-button-${elementIndex}">Delete row</button>
-             
-             
-              بسبب انه بدي اعرف لما اضغط على زر التحديث عند اي عنصر بالجدول ضغطت elementIndex  هون حطيت 
+              <button data-index=${elementIndex} onclick="deleteRow(event)" class="btn btn-danger delete-button-${elementIndex}">Delete row</button>
               <button data-index=${elementIndex} onclick="updateRow(event)" class="btn btn-warning delete-button-${elementIndex}">Update</button>
-             
+              </td>
+          </tr>
+  `
+  );
+};
+
+data.forEach((item, index) => {
+  loadDataToTable(item.name, item.last, item.handle, index);
+});
+
+const tableBody = document.querySelector(".table tbody");
+
+//////////////////////////////////////////////// الاضافة ////////////////////////////////////////////////
+// Add a new row هي الدالة الخاصة باضافة سطر جديد للجدول وهي بتتنفذ لما نكبس على زر
+const addRowToTable = (name, last, handle, elementIndex) => {
+  // عم اعملي سيليكت على الجدول
+
+  //  عم حط بقلب هذا الجدول السطر الجديد بكل عناصره
+  tableBody.insertAdjacentHTML(
+    "beforeend",
+    `
+          <tr>
+              <th scope="row">${elementIndex}</th>
+              <td>${name}</td>
+              <td>${last}</td>
+              <td>${handle}</td>
+              <td>      
+              <button data-index=${elementIndex} onclick="deleteRow(event)" class="btn btn-danger delete-button-${elementIndex}">Delete row</button>
+              <button data-index=${elementIndex} onclick="updateRow(event)" class="btn btn-warning delete-button-${elementIndex}">Update</button>
               </td>
           </tr>
   `
   );
 
-  //  وهذا الشي يساعدني جيب البيانات بسرعة بدون ما روح دور عليها بالجدولHTML هون ضفت السطر ككائن على المصفوفة بعد ما شفته على الجدول ب 
+  //  وهذا الشي يساعدني جيب البيانات بسرعة بدون ما روح دور عليها بالجدولHTML هون ضفت السطر ككائن على المصفوفة بعد ما شفته على الجدول ب
   data.push({
     name: name,
     last: last,
     handle: handle,
   });
+
+  localStorage.setItem("todo", JSON.stringify(data));
 };
 
-
-//  تبعه صفرIndex هون عرفت اول عنصر على اساس هو العنصر يلي   
-let elementIndex = 0;
+//  تبعه صفرIndex هون عرفت اول عنصر على اساس هو العنصر يلي
+let elementIndex = tableBody.children.length;
 
 //  هون بدي جيب الزر تبع الاضافة
 const newRowButton = document.querySelector(".add-new-button");
 
-
 // ضفتله مراقب للاحداث مشان لما اضغط عليه نفذ اوامر معينة
 newRowButton.addEventListener("click", () => {
-
   // هون جبنا القيم المكتوبة بحقول الادخال
   const nameInput = document.querySelector(".name");
   const lastInput = document.querySelector(".last");
@@ -74,37 +88,38 @@ newRowButton.addEventListener("click", () => {
   nameInput.value = "";
   lastInput.value = "";
   handleInput.value = "";
-
-
 });
-//////////////////////////////////////////////// انتهت الاضافة ////////////////////////////////////////////////  
+//////////////////////////////////////////////// انتهت الاضافة ////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////// الحذف ////////////////////////////////////////////////  
+//////////////////////////////////////////////// الحذف ////////////////////////////////////////////////
 // هون ضفت دالة الحذف
 const deleteRow = (event) => {
-  //بعدين احذفه TR  هون عم خبره انه بدالة الحذف جي الزر وبعدين انتقل لمستوى الأب بعدين لمستوى الأب مرة ثانية مشان كون وصلت لل 
+  //بعدين احذفه TR  هون عم خبره انه بدالة الحذف جي الزر وبعدين انتقل لمستوى الأب بعدين لمستوى الأب مرة ثانية مشان كون وصلت لل
   event.target.parentElement.parentElement.remove();
+
+  const index = event.target.dataset.index;
+
+  delete data[index];
+
+  const newData = data.filter((item) => item);
+
+  localStorage.setItem("todo", JSON.stringify(newData));
 };
-//////////////////////////////////////////////// انتهى الحذف ////////////////////////////////////////////////  
+//////////////////////////////////////////////// انتهى الحذف ////////////////////////////////////////////////
 
-
-
-//////////////////////////////////////////////// التعديل ////////////////////////////////////////////////  
+//////////////////////////////////////////////// التعديل ////////////////////////////////////////////////
 // اول شي عم جيب زر الحفظ
 const saveButton = document.querySelector(".save-after-update");
 
-// للعنصر يلي ضغطتت زر التعديل عليه  Index ثاني شي عم اعمل متغير جديد يفيدني بمعرفة شو  
+// للعنصر يلي ضغطتت زر التعديل عليه  Index ثاني شي عم اعمل متغير جديد يفيدني بمعرفة شو
 let lastIndex = 0;
 
 const updateRow = (event) => {
-
-  // data-index يلي خزته سابقاً بالزر بال  Index هون جبت الرقم من ال 
+  // data-index يلي خزته سابقاً بالزر بال  Index هون جبت الرقم من ال
   const index = event.target.dataset.index;
 
   // اسندت القيمة للمتغير يلي عرفته فوق
   lastIndex = index;
-
 
   // جبت البيانات من العنصر يلي انحفظ بالمصفوفة اول شي عند الاضافة مشان اعرف شو قيم السطر
   const todoItem = data[index];
@@ -125,7 +140,6 @@ const updateRow = (event) => {
 
 // هلأ هون عم ضيف مراقب لزر الحفظ مشان بس ينكبس ينفذ مجموعة اوامر
 saveButton.addEventListener("click", () => {
-
   //  اول شي عم ارجع جيب حقول الادخال
   const nameInput = document.querySelector(".name");
   const lastInput = document.querySelector(".last");
@@ -134,7 +148,7 @@ saveButton.addEventListener("click", () => {
   // ثاني شي عم جيب الجدول
   const tbody = document.querySelector("tbody");
 
-  // 98 يلي خزنته بالمتغير بالسطر  Index يلي بدي عدله حسب رقم  TR ثالث شي عم جيب ال  
+  // 98 يلي خزنته بالمتغير بالسطر  Index يلي بدي عدله حسب رقم  TR ثالث شي عم جيب ال
   // بعدين عم اعطيه المحتوى الجديد على حسب شو مكتوب بحقول الادخال
   tbody.children[lastIndex].innerHTML = `
         <th scope="row">${lastIndex}</th>
@@ -147,8 +161,8 @@ saveButton.addEventListener("click", () => {
         </td>
   `;
 
-  //  بعدين عم ارجع حدث العنصر نفسه بالمصفوفة 
-  // وبالمصفوفة HTML  دوما بدي حدث بمكانين بالجدول بال 
+  //  بعدين عم ارجع حدث العنصر نفسه بالمصفوفة
+  // وبالمصفوفة HTML  دوما بدي حدث بمكانين بالجدول بال
   data[lastIndex] = {
     name: nameInput.value,
     last: lastInput.value,
@@ -162,5 +176,7 @@ saveButton.addEventListener("click", () => {
   nameInput.value = "";
   lastInput.value = "";
   handleInput.value = "";
+
+  localStorage.setItem('todo', JSON.stringify(data))
 });
-//////////////////////////////////////////////// انتهى التعديل ////////////////////////////////////////////////  
+//////////////////////////////////////////////// انتهى التعديل ////////////////////////////////////////////////
